@@ -1,11 +1,11 @@
 package main
 
 import (
-    "fmt"
-    "math/rand"
-    "runtime"
-    "sync"
-    "time"
+	"fmt"
+	"math/rand"
+	"runtime"
+	"sync"
+	"time"
 )
 
 func createRandomArray(n int) []int {
@@ -69,9 +69,10 @@ func merge(arr []int, mid int) {
 }
 
 func main() {
-    runtime.GOMAXPROCS(16)
+    runtime.GOMAXPROCS(6)
 
-    n := 10000000 
+    n := 999 
+    rand.Seed(69)
 
     fmt.Printf("Criando um vetor com %d elementos\n", n)
     arr := createRandomArray(n)

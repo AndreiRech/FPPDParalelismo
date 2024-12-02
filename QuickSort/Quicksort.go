@@ -1,11 +1,11 @@
 package main
 
 import (
-    "fmt"
-    "math/rand"
-    "runtime"
-    "sync"
-    "time"
+	"fmt"
+	"math/rand"
+	"runtime"
+	"sync"
+	"time"
 )
 
 func createRandomArray(n int) []int {
@@ -59,9 +59,10 @@ func QuickSort(arr []int) {
 }
 
 func main() {
-    runtime.GOMAXPROCS(1)
+    runtime.GOMAXPROCS(6)
 
-    n := 1000000
+    n := 999
+    rand.Seed(69)
 
     fmt.Printf("Criando um vetor com %d elementos\n", n)
     arr := createRandomArray(n)
