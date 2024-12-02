@@ -59,9 +59,9 @@ func QuickSort(arr []int) {
 }
 
 func main() {
-    runtime.GOMAXPROCS(6)
+    runtime.GOMAXPROCS(10)
 
-    n := 999
+    n := 9999
     rand.Seed(69)
 
     fmt.Printf("Criando um vetor com %d elementos\n", n)
