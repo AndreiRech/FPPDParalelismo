@@ -27,37 +27,67 @@ import (
 	"fmt"
 	"math/rand"
 	"runtime"
+	"sync"
 	"time"
 )
 
 func main() {
-	casas := [6]int{999,
+	casas := [6]int{
+		999,
 		999999,
 		999999999,
 		999999999999,
 		999999999999999,
-		999999999999999999}
+		999999999999999999,
+	}
 
-	runtime.GOMAXPROCS(16) // usando um processador
-	rand.Seed(time.Now().UnixNano())
+	processCounts := []int{1, 2, 4, 6, 8, 10, 12, 14, 16}
+	rand.Seed(69)
 
-	for _, tam := range casas {
-		fmt.Println(tam, ' ', timeToGenPrime(tam))
+	N := 10
+
+	for _, procs := range processCounts {
+		fmt.Printf("Testando com %d processadores:\n", procs)
+		runtime.GOMAXPROCS(procs)
+
+		for _, tam := range casas {
+			start := time.Now()
+
+			timeToGenPrime(N, tam, procs)
+
+			fmt.Printf("Tamanho: %d | Tempo: %v\n", tam, time.Since(start))
+		}
+
+		fmt.Println()
 	}
 }
 
 func genPrime(tam int) {
 	notPrimo := true
+	v := 0
 	for notPrimo {
-		v := rand.Intn(tam)
+		v = rand.Intn(tam)
 		notPrimo = !isPrime(v)
 	}
+	//fmt.Printf("Primo: %d\n", v)
 }
 
-func timeToGenPrime(tam int) time.Duration {
-	start := time.Now()
-	genPrime(tam)
-	return time.Since(start)
+func timeToGenPrime(N, tam, procs int) {
+	var wg sync.WaitGroup
+	ch := make(chan struct{}, procs)
+
+	for i := 0; i < N; i++ {
+		wg.Add(1)
+		ch <- struct{}{}
+
+		go func() {
+			defer wg.Done()
+			genPrime(tam)
+			<-ch
+		}()
+	}
+
+	wg.Wait()
 }
 
 // Is p prime?``
